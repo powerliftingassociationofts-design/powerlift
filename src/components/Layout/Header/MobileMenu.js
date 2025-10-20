@@ -1,8 +1,7 @@
 "use client";
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useState } from "react";
-import MobileLogo from '../../..//assets/images/plat2.png'
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import MobileLogo from "../../../assets/images/plat2.png";
 
 const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
   const [isActive, setIsActive] = useState({
@@ -11,30 +10,31 @@ const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
     subMenuKey: "",
   });
 
+  const [parentMenu, setParentMenu] = useState("");
+  const [activeMenu, setActiveMenu] = useState("");
+
+  // Toggle dropdown
   const handleToggle = (key, subMenuKey = "") => {
     if (isActive.key === key && isActive.subMenuKey === subMenuKey) {
-      setIsActive({
-        status: false,
-        key: "",
-        subMenuKey: "",
-      });
+      setIsActive({ status: false, key: "", subMenuKey: "" });
     } else {
-      setIsActive({
-        status: true,
-        key,
-        subMenuKey,
-      });
+      setIsActive({ status: true, key, subMenuKey });
     }
   };
+
+  // ✅ Close menu when any link is clicked
+  const handleMenuClose = (path = "") => {
+    setActiveMenu(path);
+    handleMobileMenu(); // closes mobile menu
+  };
+
   return (
     <>
-      {/*End Mobile Menu */}
       <div className="mobile-nav__wrapper">
         <div
           className="mobile-nav__overlay mobile-nav__toggler"
           onClick={handleMobileMenu}
         />
-        {/* /.mobile-nav__overlay */}
         <div className="mobile-nav__content">
           <span
             className="mobile-nav__close mobile-nav__toggler"
@@ -42,196 +42,169 @@ const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
           >
             <i className="fa fa-times" />
           </span>
+
+          {/* Logo */}
           <div className="logo-box">
-            <Link to="/" aria-label="logo image">
-            <img src={MobileLogo} alt="Logo" />
+            <Link to="/" aria-label="logo image" onClick={() => handleMenuClose("/")}>
+              <img src={MobileLogo} alt="Logo" />
             </Link>
           </div>
-          {/* /.logo-box */}
+
+          {/* Navigation */}
           <div className="mobile-nav__container">
-          <ul className="main-menu__list">
-  <li>
-    <Link to="/" onClick={handleMobileMenu}>
-      Home
-    </Link>
-  </li>
+            <ul className="main-menu__list">
+              <li>
+                <Link
+                  to="/"
+                  className={activeMenu === "/" ? "active-menu" : ""}
+                  onClick={() => handleMenuClose("/")}
+                >
+                  Home
+                </Link>
+              </li>
 
-  <li className={isActive.key === 2 ? "dropdown current" : "dropdown"}>
-    <Link to="#" onClick={handleMobileMenu}>
-      Pages
-    </Link>
-    <ul style={{ display: `${isActive.key === 2 ? "block" : "none"}` }}>
-      <li>
-        <Link to="/about" onClick={handleMobileMenu}>
-          About WPC–Telangana
-        </Link>
-      </li>
-      <li>
-        <Link to="/team" onClick={handleMobileMenu}>
-          Committee Members
-        </Link>
-      </li>
-      <li>
-        <Link to="/team-details" onClick={handleMobileMenu}>
-          Referees
-        </Link>
-      </li>
-      <li>
-        <Link to="/testimonials" onClick={handleMobileMenu}>
-          Testimonials
-        </Link>
-      </li>
-      <li>
-        <Link to="/pricing" onClick={handleMobileMenu}>
-          Results
-        </Link>
-      </li>
-      <li>
-        <Link to="/gallery" onClick={handleMobileMenu}>
-          Gallery
-        </Link>
-      </li>
-      <li>
-        <Link to="/gallery-details" onClick={handleMobileMenu}>
-          Gallery Details
-        </Link>
-      </li>
-      <li>
-        <Link to="/faq" onClick={handleMobileMenu}>
-          FAQ
-        </Link>
-      </li>
-      <li>
-        <Link to="/404" onClick={handleMobileMenu}>
-          404 Error
-        </Link>
-      </li>
-    </ul>
-    <div
-      className={isActive.key === 2 ? "dropdown-btn open" : "dropdown-btn"}
-      onClick={() => handleToggle(2)}
-    >
-      <span className="fa fa-angle-right" />
-    </div>
-  </li>
+              {/* Events Dropdown */}
+              <li
+                className={
+                  parentMenu === "Events"
+                    ? "dropdown current-menu-item"
+                    : "dropdown"
+                }
+              >
+                <Link
+                  to="/event"
+                  onClick={() => {
+                    setParentMenu("Events");
+                    handleMenuClose("/event");
+                  }}
+                >
+                  Events
+                </Link>
 
-  <li className={isActive.key === 3 ? "dropdown current" : "dropdown"}>
-    <Link to="#" onClick={handleMobileMenu}>
-      Championships
-    </Link>
-    <ul style={{ display: `${isActive.key === 3 ? "block" : "none"}` }}>
-      <li>
-        <Link to="/services" onClick={handleMobileMenu}>
-          District Championships
-        </Link>
-      </li>
-      <li>
-        <Link to="/event-prodigy" onClick={handleMobileMenu}>
-          State Championships
-        </Link>
-      </li>
-      <li>
-        <Link to="/stellar-events-co" onClick={handleMobileMenu}>
-          Open Meets
-        </Link>
-      </li>
-      <li>
-        <Link to="/elite-event-management" onClick={handleMobileMenu}>
-          Benchpress Events
-        </Link>
-      </li>
-      <li>
-        <Link to="/infinite-occasions" onClick={handleMobileMenu}>
-          Deadlift Events
-        </Link>
-      </li>
-      <li>
-        <Link to="/dream-event-planners" onClick={handleMobileMenu}>
-          Powerlifting Events
-        </Link>
-      </li>
-    </ul>
-    <div
-      className={isActive.key === 3 ? "dropdown-btn open" : "dropdown-btn"}
-      onClick={() => handleToggle(3)}
-    >
-      <span className="fa fa-angle-right" />
-    </div>
-  </li>
+                <ul className="sub-menu">
+                  <li
+                    className={
+                      parentMenu === "Championships"
+                        ? "dropdown current-menu-item"
+                        : "dropdown"
+                    }
+                  >
+                    <Link
+                      to="/event"
+                      className={`flex items-center justify-between ${
+                        activeMenu === "/event" ? "active-menu" : ""
+                      }`}
+                      onClick={() => handleMenuClose("/event")}
+                    >
+                      Championships <span className="ml-2">+</span>
+                    </Link>
 
-  <li className={isActive.key === 4 ? "dropdown current" : "dropdown"}>
-    <Link to="#" onClick={handleMobileMenu}>
-      Membership
-    </Link>
-    <ul style={{ display: `${isActive.key === 4 ? "block" : "none"}` }}>
-      <li>
-        <Link to="/event" onClick={handleMobileMenu}>
-          How to Join
-        </Link>
-      </li>
-      <li>
-        <Link to="/event-details" onClick={handleMobileMenu}>
-          Benefits & Rules
-        </Link>
-      </li>
-    </ul>
-    <div
-      className={isActive.key === 4 ? "dropdown-btn open" : "dropdown-btn"}
-      onClick={() => handleToggle(4)}
-    >
-      <span className="fa fa-angle-right" />
-    </div>
-  </li>
+                    <ul className="sub-menu">
+                      {[
+                        { path: "/event-details/year-1", name: "State Championship" },
+                        { path: "/event-details/year-3", name: "Gym Point Championship" },
+                        { path: "/event-details/year-4", name: "Origin Championship" },
+                        { path: "/event-details/year-5", name: "Ozzie Championship" },
+                        { path: "/event-details/year-6", name: "Potens Championship" },
+                        { path: "/event-details/year-7", name: "Second State Championship" },
+                        { path: "/event-details/year-8", name: "Telangana First State Championship" },
+                        { path: "/event-details/year-9", name: "FSG Independence Day" },
+                        { path: "/event-details/year-10", name: "AF Championship3" },
+                      ].map((item) => (
+                        <li key={item.path}>
+                          <Link
+                            to={item.path}
+                            className={activeMenu === item.path ? "active-menu" : ""}
+                            onClick={() => handleMenuClose(item.path)}
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                </ul>
+              </li>
 
-  <li className={isActive.key === 5 ? "dropdown current" : "dropdown"}>
-    <Link to="#" onClick={handleMobileMenu}>
-      News & Updates
-    </Link>
-    <ul style={{ display: `${isActive.key === 5 ? "block" : "none"}` }}>
-      <li>
-        <Link to="/blog" onClick={handleMobileMenu}>
-          Latest News
-        </Link>
-      </li>
-      <li>
-        <Link to="/blog-list" onClick={handleMobileMenu}>
-          All Updates
-        </Link>
-      </li>
-      <li>
-        <Link to="/blog-details" onClick={handleMobileMenu}>
-          News Details
-        </Link>
-      </li>
-    </ul>
-    <div
-      className={isActive.key === 5 ? "dropdown-btn open" : "dropdown-btn"}
-      onClick={() => handleToggle(5)}
-    >
-      <span className="fa fa-angle-right" />
-    </div>
-  </li>
+              {/* Championships Dropdown */}
+              <li
+                className={isActive.key === 3 ? "dropdown current" : "dropdown"}
+              >
+                <Link to="#" onClick={() => handleToggle(3)}>
+                  Championships
+                </Link>
+                <ul
+                  style={{ display: `${isActive.key === 3 ? "block" : "none"}` }}
+                >
+                  {[
+                    { path: "/services", name: "District Championships" },
+                    { path: "/event-prodigy", name: "State Championships" },
+                    { path: "/stellar-events-co", name: "Open Meets" },
+                    { path: "/elite-event-management", name: "Benchpress Events" },
+                    { path: "/infinite-occasions", name: "Deadlift Events" },
+                    { path: "/dream-event-planners", name: "Powerlifting Events" },
+                  ].map((item) => (
+                    <li key={item.path}>
+                      <Link
+                        to={item.path}
+                        onClick={() => handleMenuClose(item.path)}
+                        className={activeMenu === item.path ? "active-menu" : ""}
+                      >
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <div
+                  className={
+                    isActive.key === 3 ? "dropdown-btn open" : "dropdown-btn"
+                  }
+                  onClick={() => handleToggle(3)}
+                >
+                  <span className="fa fa-angle-right" />
+                </div>
+              </li>
 
-  <li>
-    <Link to="/contact" onClick={handleMobileMenu}>
-      Contact
-    </Link>
-  </li>
-</ul>
+              {/* Other Menu Items */}
+              {[
+                { path: "/collaboration", name: "Collaboration" },
+                { path: "/inspire", name: "Inspire" },
+                { path: "/gallery", name: "Gallery" },
+                { path: "/results", name: "Results" },
+                { path: "/referees", name: "Referees" },
+                { path: "/contact", name: "Contact" },
+              ].map((item) => (
+                <li
+                  key={item.path}
+                  className={
+                    activeMenu === item.path ? "current-menu-item" : ""
+                  }
+                >
+                  <Link
+                    to={item.path}
+                    className={activeMenu === item.path ? "active-menu" : ""}
+                    onClick={() => handleMenuClose(item.path)}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
+
+          {/* Contact Info */}
           <ul className="mobile-nav__contact list-unstyled">
             <li>
               <i className="fa fa-envelope" />
-              <a href="mailto:info@wpctelangana.in">
-                info@wpctelangana.in
-              </a>
+              <a href="mailto:info@wpctelangana.in">info@wpctelangana.in</a>
             </li>
             <li>
               <i className="fa fa-phone-alt" />
               <a href="tel:+91XXXXXXXXXXX">+91 XXXXX XXXXX</a>
             </li>
           </ul>
-          {/* /.mobile-nav__contact */}
+
+          {/* Social Links */}
           <div className="mobile-nav__top">
             <div className="mobile-nav__social">
               <Link to="#" className="fab fa-twitter" />
@@ -239,13 +212,11 @@ const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
               <Link to="#" className="fab fa-pinterest-p" />
               <Link to="#" className="fab fa-instagram" />
             </div>
-            {/* /.mobile-nav__social */}
           </div>
-          {/* /.mobile-nav__top */}
         </div>
-        {/* /.mobile-nav__content */}
       </div>
 
+      {/* Sidebar Overlay */}
       <div
         className="nav-overlay"
         style={{ display: `${isSidebar ? "block" : "none"}` }}
@@ -254,4 +225,5 @@ const MobileMenu = ({ isSidebar, handleMobileMenu, handleSidebar }) => {
     </>
   );
 };
+
 export default MobileMenu;
